@@ -1,0 +1,66 @@
+.form {
+  width: 80%;
+  height: 70%;
+  margin: auto;
+  padding-top: 170px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+h1,
+h2 {
+  color: var(--azulmarinho);
+  text-align: center;
+}
+
+input,
+select {
+  padding: 10px;
+  outline: none;
+  font-weight: 400;
+  border: none;
+  font-size: 17px;
+  color: #32324f;
+  background-color: #ecf2f7;
+  border-radius: 5px;
+  width: 100%;
+}
+
+input[type="radio"] {
+  height: 10px;
+}
+input[type="submit"] {
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+  width: 100%;
+  height: 35px;
+  font-weight: bold;
+  background-color: #1b2c58;
+  color: #fff;
+}
+
+
+input[type="submit"]:hover {
+  background: var(--azulpiscina);
+  color: #fff;
+  transition: 0.6s;
+}
+ 
+
+.sexo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px;
+}
+
+@media (max-device-width: 768px) {
+
+
+  input,
+  label {
+    margin: 4px;
+  }
+}

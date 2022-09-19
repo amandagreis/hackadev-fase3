@@ -1,0 +1,25 @@
+#showcase {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url("../../../public/static/media/Banner.jpeg") no-repeat center center/cover;
+  }
+  
+#showcase .btn {
+  display: inline-block;
+  padding: 8px 30px;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  background: var(--azulmarinho);
+  color: var(--branco);
+  border-radius: 10px;
+  border: none;
+}
+
+#showcase .btn:hover {
+  cursor: pointer;
+  background: var(--azulpiscina);
+  transition: 1s;
+}

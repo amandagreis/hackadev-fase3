@@ -1,0 +1,200 @@
+.texto {
+  height: 65vh;
+  color: var(--azulmarinho);
+}
+.texto h3 {
+  padding: 1% 8%;
+  padding-top: 150px;
+}
+
+.texto p {
+  padding: 1% 8%;
+  text-align: left;
+}
+
+.texto h4 {
+  padding: 0 8%;
+  padding-top: 1%;
+}
+
+.textoseguranca {
+  height: 64.5vh;
+  min-height: 75%;
+  color: var(--azulmarinho);
+}
+.textoseguranca h3 {
+  padding: 1% 8%;
+  padding-top: 150px
+}
+
+.textoseguranca p {
+  padding: 1% 8%;   
+  text-align: left;
+}
+
+.textoseguranca h4 {
+  padding: 0 8%;
+  padding-top: 1%;
+}
+
+.textoTrocaeDevolucao {
+  height: auto;
+  color: var(--azulmarinho);
+}
+
+.textoTrocaeDevolucao h3 {
+  padding: 1% 8%;
+  padding-top: 150px;
+}
+
+.textoTrocaeDevolucao h4 {
+  padding: 0 8%;
+  padding-top: 20px;
+}
+
+.textoTrocaeDevolucao p {
+  padding: 1% 8%;
+  text-align: left;
+}
+
+.textocuidados {
+  height: auto;
+  color: var(--azulmarinho);
+  padding-bottom: 20px;
+}
+
+.textocuidados h3 {
+  padding: 1% 8%;
+  padding-top: 150px;
+}
+
+.textocuidados p {
+  padding: 0.5% 8%;
+  text-align: left;
+}
+
+.textocuidados h4 {
+  padding: 0 8%;
+  padding-top: 1%;
+}
+
+.textoFaleConosco {
+  height: auto;
+  color: var(--azulmarinho);
+}
+
+.textoFaleConosco h3 {
+  padding: 1% 8%;
+  padding-top: 150px;
+}
+
+.textoFaleConosco p {
+  padding: 1% 8%;
+  text-align: left;
+}
+
+.textoFaleConosco h4 {
+  padding: 0 8%;
+  padding-top: 20px;
+}
+
+.textoFaleConosco .formulario {
+  width: 80%;
+  padding: 0 8%;
+  margin: auto;
+}
+
+.textoFaleConosco .formulario label,
+input {
+  display: block;
+}
+
+.textoFaleConosco .formulario .inputcontainer {
+  position: relative;
+  padding: 10px 0px;
+}
+
+.textoFaleConosco .formulario .inputuser {
+  background: var(--cinzaclaro);
+  border: 1px solid var(--cinzaescuro);
+  font-size: 15px;
+  width: 100%;
+  height: 30px;
+  padding: 8px;
+  margin: auto;
+}
+
+.textoFaleConosco .formulario .labelinput {
+  position: absolute;
+  top: 0px;
+  padding-left: 6px;
+  pointer-events: none;
+  padding-top: 15px;
+  color: var(--cinzaescuro);
+  transition: 0.5s;
+}
+
+#textArea {
+  width: 100%;
+  height: 190px;
+}
+
+.textoFaleConosco .formulario .inputuser:focus ~ .labelinput {
+  top: -22px;
+  font-size: 12px;
+  color: var(--azulmarinho);
+  font-weight: bold;
+}
+
+.textoFaleConosco .formulario .inputuser:valid ~ .labelinput {
+  top: -22px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.textoFaleConosco .btnEnviar {
+  display: block;
+  width: 120px;
+  height: 30px;
+  border-radius: 5px;
+  border: none;
+  background: var(--azulmarinho);
+  color: var(--branco);
+  cursor: pointer;
+}
+
+.textoFaleConosco .btnEnviar:hover {
+  background: var(--azulpiscina);
+}
+
+.textoFaleConosco textarea {
+  font-family: "Poppins", sans-serif;
+}
+
+/* Mobile First */
+@media only screen and (max-width: 654px) {
+  .texto p,
+  .textoseguranca p,
+  .textocuidados p,
+  .textoFaleConosco p,
+  .textoTrocaeDevolucao p {
+    font-size: 0.5rem !important;
+  }
+}
+
+
+@media only screen and (max-width: 1024px) {
+  .texto {
+    font-size: 0.7rem;
+    padding: 0px;
+    margin: 5px;
+  }
+
+  .textoTrocaeDevolucao {
+    font-size: 0.6rem;
+  }
+
+  .textoFaleConosco {
+    font-size: 0.6rem;
+  }
+}
