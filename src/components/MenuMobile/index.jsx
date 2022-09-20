@@ -13,7 +13,10 @@ export default function MenuMobile({ menuIsVisible, setMenuIsVisible }) {
       ? "hidden"
       : "auto";
   }, [menuIsVisible]);
-  console.log(document.body.style.overflowY);
+ 
+  function fechaCarrinho(){
+    console.log("fecha")
+  }
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -61,7 +64,7 @@ export default function MenuMobile({ menuIsVisible, setMenuIsVisible }) {
             <div onClick={() => setIsOpen(!isOpen)} style={{ cursor: "pointer" }}>
               <FontAwesomeIcon icon={faCartShopping} />
            </div>
-           {isOpen && <Carrinho isOpen={isOpen} />}
+           {isOpen && <Carrinho fechaCarrinho={fechaCarrinho} isOpen={isOpen} />}
           </div>
           </div>
       </div>
