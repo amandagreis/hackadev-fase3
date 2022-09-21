@@ -8,12 +8,29 @@ import IconPg4 from "../../checkout-icons/mercadopago-icon.png";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Costumer } from "../Data/Costumer";
-import { ShoppingBag } from "../Data/ShoppingBag";
 import { CarrinhoContext } from "../Context/carrinhoProdutos";
 import { limpaProductsTracker} from "../Context/carrinhoProdutos";
+import { type } from "@testing-library/user-event/dist/type";
 
 Modal.setAppElement("#root");
 
+function converteReal(val) {
+  if (val === undefined || val === 0) return;
+
+  let converted = val.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+
+  return converted;
+}
+
+function formataFrete(val){
+  if(typeof(val) === "number")
+  val = converteReal(val);
+
+  return val;
+}
 
 const TextField = ({ placeholder }) => {
   return (
@@ -185,27 +202,28 @@ const Summary = ({
   );
 };
 
-const OptionField = (props) => {
-  let hasIcon = props.hasIcon;
+const OptionField = ({name, image, alt, text, description, handleChange, hasIcon, valor}) => {
+  
+
   if (hasIcon)
     return (
       <div className="optionField">
-        <div className="clickable">
-          <input type="radio" className="clickable" name={props.name} />
+        <div className="clickable" >
+          <input type="radio" className="clickable" name={name} onChange={() => handleChange(valor)} />
         </div>
-        <img className="icon" src={props.image} alt={props.alt} />
-        <p className="optionText">{props.text}</p>
-        <p className="optionDescription">{props.description}</p>
+        <img className="icon" src={image} alt={alt} />
+        <p className="optionText">{text}</p>
+        <p className="optionDescription">{description}</p>
       </div>
     );
   else
     return (
       <div className="optionField">
-        <div className="clickable">
-          <input type="radio" className="clickable" name={props.name} />
+        <div className="clickable" >
+          <input type="radio" className="clickable" name={name}  onChange={() => handleChange(valor)} />
         </div>
-        <p className="optionText">{props.text}</p>
-        <p className="optionDescription">{props.description}</p>
+        <p className="optionText">{text}</p>
+        <p className="optionDescription">{description}</p>
       </div>
     );
 };
@@ -267,21 +285,49 @@ function CuponFunction() {
 const MainSection = () => {
 
   const { selectItens } = useContext(CarrinhoContext);
-  let soma = 0;
+  const [valorFrete, setValorFrete] = useState("-")
+  const [prazoEntrega, setPrazoEntrega] = useState("-")
+  let somaProdutos = 0;
+  let pagamentoSelecionado = "";
+  let quantidadeParcelas = "";
+  let totalAPagar = 0;
+
+  function handleChange (val){
+    
+    if(val === 20)
+    setPrazoEntrega("Até 6 dias úteis");
+
+    if(val === 50)
+    setPrazoEntrega("Até 2 dias úteis");
+
+    if(val == "Grátis")
+    setPrazoEntrega("Retirada em até 2 horas");
+
+    setValorFrete(val)
+
+  }
 
   return (
-    <section className="main_section">
+    <section className="main_section" >
       <div className="containerLeft">
         <Section
           name="SUAS COMPRAS"
+          key={Date.now()}
           content={
             <ProductBag
               
               content={selectItens.map((shoppingBag) => {
-                soma += shoppingBag.precoDesconto * shoppingBag.quantidade;
+                somaProdutos += shoppingBag.precoDesconto * shoppingBag.quantidade;
+               
+                if(valorFrete !== "Grátis" && valorFrete !== "-")
+                totalAPagar = somaProdutos + valorFrete;
+                else
+                totalAPagar = somaProdutos;
+
                 return (
                   <>
                     <Product
+                      key={Date.now()}
                       image={shoppingBag.image}
                       alt={shoppingBag.description}
                       quantity={`x ${shoppingBag.quantidade}`}
@@ -291,7 +337,7 @@ const MainSection = () => {
                   </>
                 );
               })}
-              subtotal={`Subtotal: ${soma.toLocaleString("pt-BR", {
+              subtotal={`Subtotal: ${somaProdutos.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               })}`}
@@ -300,15 +346,16 @@ const MainSection = () => {
         />
         <Section
           name="ENDEREÇO"
+          key={`${Date.now()}Endereço`}
           content={
             <>
               {Costumer.map((costumer) => {
                 return (
-                  <span className="Usuario">
-                    <p>{costumer.name}</p>
-                    <p>{`${costumer.street} nº${costumer.number}`}</p>
-                    <p>{`${costumer.district}, CEP ${costumer.cep}, ${costumer.city}-${costumer.state}`}</p>
-                    <p>{`Telefone: ${costumer.phone}`}</p>
+                  <span className="Usuario" key={`${Date.now()}usuario`}>
+                    <p key={`${Date.now()}p1`}>{costumer.name}</p>
+                    <p key={`${Date.now()}p2`}>{`${costumer.street} nº${costumer.number}`}</p>
+                    <p key={`${Date.now()}p3`}>{`${costumer.district}, CEP ${costumer.cep}, ${costumer.city}-${costumer.state}`}</p>
+                    <p key={`${Date.now()}p4`}>{`Telefone: ${costumer.phone}`}</p>
                   </span>
                 );
               })}
@@ -324,18 +371,25 @@ const MainSection = () => {
           name="FRETE"
           content={
             <>
+
               <OptionField
+                valor={50}
+                handleChange={handleChange}
                 name="Frete"
                 text="Sedex - Até 2 dias úteis"
                 description={`+R$ ${(50).toFixed(2)}`}
               />
               <OptionField
+                valor={20}
+                handleChange={handleChange}
                 name="Frete"
                 text="PAC - Até 6 dias úteis"
                 description={`+R$ ${(20).toFixed(2)}`}
               />
 
               <OptionField
+                valor={"Grátis"}
+                handleChange={handleChange}
                 name="Frete"
                 text="Retira - Imediato"
                 description="Grátis"
@@ -390,13 +444,13 @@ const MainSection = () => {
           content={
             <>
               <Summary
-                subtotal={"R$ 256,92"}
-                frete={"R$ 50,00"}
+                subtotal={converteReal(somaProdutos)}
+                frete={formataFrete(valorFrete)}
                 desconto={"R$ 17,98"}
-                total={"R$ 288,94"}
-                prazo={"Até 2 dias úteis"}
-                formaPagamento={"Pix"}
-                parcelas={"À vista"}
+                total={converteReal(totalAPagar)}
+                prazo={prazoEntrega}
+                formaPagamento={pagamentoSelecionado}
+                parcelas={quantidadeParcelas}
               />
             </>
           }

@@ -6,7 +6,7 @@ export default function Showcase() {
     return (
         <header id="showcase">
             <Link 
-            activeclassName="active"
+            className="active"
             to="catalog" spy={true} 
             smooth={true} 
             offset={-88} 

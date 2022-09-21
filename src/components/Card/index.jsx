@@ -14,6 +14,7 @@ function Card({
   parcelamento,
   descricaoTamanho,
   roupa,
+  quantidade
 }) {
   const { adicionarItem } = useContext(CarrinhoContext);
   const [selectedSize, setSelectedSize] = useState(null);
