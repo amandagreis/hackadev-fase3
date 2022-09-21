@@ -1,5 +1,5 @@
 import "./styles.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Modal from "react-modal";
 import IconPg1 from "../../checkout-icons/boleto-icon.png";
 import IconPg2 from "../../checkout-icons/pix-icon.png";
@@ -8,9 +8,12 @@ import IconPg4 from "../../checkout-icons/mercadopago-icon.png";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Costumer } from "../Data/Costumer";
-import { ShoppingBag } from "../Data/ShoppingBag"
+import { ShoppingBag } from "../Data/ShoppingBag";
+import { CarrinhoContext } from "../Context/carrinhoProdutos";
+import { limpaProductsTracker} from "../Context/carrinhoProdutos";
 
 Modal.setAppElement("#root");
+
 
 const TextField = ({ placeholder }) => {
   return (
@@ -90,6 +93,12 @@ const CheckoutModal = ({
   modalText,
 }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
+  const { setSelectItens } = useContext(CarrinhoContext);
+
+  function limpaCarrinho(){
+    setSelectItens([]);
+    limpaProductsTracker();
+  }
 
   function openModal() {
     setIsOpen(true);
@@ -101,7 +110,7 @@ const CheckoutModal = ({
 
   return (
     <div className="modal-container">
-      <button className="modal-opener" onClick={openModal}>
+      <button className="modal-opener" onClick={() => {openModal(); limpaCarrinho()}}>
         {openButtonText}
       </button>
       <Modal
@@ -256,6 +265,10 @@ function CuponFunction() {
 }
 
 const MainSection = () => {
+
+  const { selectItens } = useContext(CarrinhoContext);
+  let soma = 0;
+
   return (
     <section className="main_section">
       <div className="containerLeft">
@@ -263,25 +276,25 @@ const MainSection = () => {
           name="SUAS COMPRAS"
           content={
             <ProductBag
-              subtotal={`Subtotal: ${ShoppingBag.map((bag) => bag.price)
-                .reduce((acc, price) => price + acc)
-                .toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })}`}
-              content={ShoppingBag.map((shoppingBag) => {
+              
+              content={selectItens.map((shoppingBag) => {
+                soma += shoppingBag.precoDesconto * shoppingBag.quantidade;
                 return (
                   <>
                     <Product
                       image={shoppingBag.image}
                       alt={shoppingBag.description}
-                      quantity={`x ${shoppingBag.quantity}`}
-                      priceOriginal={shoppingBag.priceOriginal}
-                      price={shoppingBag.price}
+                      quantity={`x ${shoppingBag.quantidade}`}
+                      priceOriginal={shoppingBag.precoOriginal}
+                      price={shoppingBag.precoDesconto}
                     />
                   </>
                 );
               })}
+              subtotal={`Subtotal: ${soma.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}`}
             />
           }
         />

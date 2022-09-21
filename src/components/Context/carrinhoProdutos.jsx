@@ -4,9 +4,14 @@ let productsTracker =[];
 
 export const CarrinhoContext = createContext();
 
+export function limpaProductsTracker(){
+  productsTracker = [];
+}
+
 export function CarrinhoContextProvider({ children }) {
   const [data, setData] = useState(dados);
   const [selectItens, setSelectItens] = useState([]);
+  const [produtctsTracker, setProductsTracker] = useState([])
 
   function adicionarItem(value, roupa) {
     if(value){
