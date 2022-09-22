@@ -2,9 +2,10 @@ import "./style.css";
 import CarrinhoItem from "../CarrinhoItem/index";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { CarrinhoContext } from "../Context/carrinhoProdutos";
-import {Link} from "react-router-dom"
+import {Link} from "react-router-dom";
 
-function Carrinho({ fechaCarrinho }) {
+
+function Carrinho() {
   const [animation, setAnimation] = useState(false);
   const { selectItens } = useContext(CarrinhoContext);
 

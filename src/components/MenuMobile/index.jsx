@@ -14,10 +14,6 @@ export default function MenuMobile({ menuIsVisible, setMenuIsVisible }) {
       : "auto";
   }, [menuIsVisible]);
  
-  function fechaCarrinho(){
-    console.log("fecha")
-  }
-
   const [isOpen, setIsOpen] = useState(false);
 
   const LiRef = useRef();
@@ -32,6 +28,10 @@ export default function MenuMobile({ menuIsVisible, setMenuIsVisible }) {
 
     return () => window.removeEventListener("click", checkClick);
   }, [isOpen]);
+
+  function fechaCarrinho(){
+    setIsOpen(false);
+  }
 
   return (
     <Container isVisible={menuIsVisible}>
@@ -64,7 +64,7 @@ export default function MenuMobile({ menuIsVisible, setMenuIsVisible }) {
             <div onClick={() => setIsOpen(!isOpen)} style={{ cursor: "pointer" }}>
               <FontAwesomeIcon icon={faCartShopping} />
            </div>
-           {isOpen && <Carrinho fechaCarrinho={fechaCarrinho} isOpen={isOpen} />}
+                   {isOpen && <Carrinho isOpen={isOpen} />} 
           </div>
           </div>
       </div>

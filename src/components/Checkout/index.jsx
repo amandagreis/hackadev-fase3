@@ -10,7 +10,8 @@ import { Link } from "react-router-dom";
 import { Costumer } from "../Data/Costumer";
 import { CarrinhoContext } from "../Context/carrinhoProdutos";
 import { limpaProductsTracker} from "../Context/carrinhoProdutos";
-import { type } from "@testing-library/user-event/dist/type";
+let escolheuFrete, escolheuPagamento;
+
 
 Modal.setAppElement("#root");
 
@@ -115,6 +116,8 @@ const CheckoutModal = ({
   function limpaCarrinho(){
     setSelectItens([]);
     limpaProductsTracker();
+    escolheuFrete = false;
+    escolheuPagamento = false;
   }
 
   function openModal() {
@@ -125,9 +128,25 @@ const CheckoutModal = ({
     setIsOpen(false);
   }
 
+  function terminaCompra(){
+    if(escolheuFrete && escolheuPagamento){
+      openModal();
+      limpaCarrinho();
+    }
+    else{
+      if(escolheuFrete && !escolheuPagamento)
+      window.alert("Escolha uma forma de pagamento!");
+      else if(!escolheuFrete && escolheuPagamento)
+      window.alert("Escolha o tipo de frete!");
+      else 
+      window.alert("Escolha uma forma de pagamento e o frete!")
+    }
+  }
+
+ 
   return (
     <div className="modal-container">
-      <button className="modal-opener" onClick={() => {openModal(); limpaCarrinho()}}>
+      <button className="modal-opener" onClick={() => terminaCompra()}>
         {openButtonText}
       </button>
       <Modal
@@ -148,6 +167,7 @@ const CheckoutModal = ({
       </Modal>
     </div>
   );
+
 };
 
 const Cupon = ({ handleDiscount, discount }) => {
@@ -193,7 +213,7 @@ const Summary = ({
     <div className="summary">
       <KeyValuePair entry="Subtotal" value={subtotal} />
       <KeyValuePair entry="Frete" value={frete} />
-      <KeyValuePair entry="Desconto" value={desconto} />
+      {/*<KeyValuePair entry="Desconto" value={desconto} />*/}
       <KeyValuePair entry="Total" value={total} />
       <KeyValuePair entry="Prazo" value={prazo} />
       <KeyValuePair entry="Forma de Pagamento" value={formaPagamento} />
@@ -202,14 +222,14 @@ const Summary = ({
   );
 };
 
-const OptionField = ({name, image, alt, text, description, handleChange, hasIcon, valor}) => {
+const OptionField = ({name, image, alt, text, description, alteraFrete, alteraPagamento, hasIcon, valor}) => {
   
 
   if (hasIcon)
     return (
       <div className="optionField">
         <div className="clickable" >
-          <input type="radio" className="clickable" name={name} onChange={() => handleChange(valor)} />
+          <input type="radio" className="clickable" name={name} onChange={() => alteraPagamento(valor)} />
         </div>
         <img className="icon" src={image} alt={alt} />
         <p className="optionText">{text}</p>
@@ -220,7 +240,7 @@ const OptionField = ({name, image, alt, text, description, handleChange, hasIcon
     return (
       <div className="optionField">
         <div className="clickable" >
-          <input type="radio" className="clickable" name={name}  onChange={() => handleChange(valor)} />
+          <input type="radio" className="clickable" name={name}  onChange={() => alteraFrete(valor)} />
         </div>
         <p className="optionText">{text}</p>
         <p className="optionDescription">{description}</p>
@@ -238,22 +258,13 @@ const ProductBag = ({ content, subtotal }) => {
 };
 
 const Product = ({ image, alt, quantity, priceOriginal, price }) => {
-  function valueToBRL(val) {
-    if (val === undefined || val === 0) return;
-
-    let converted = val.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-
-    return converted;
-  }
+  
   return (
     <div className="product">
       <img src={image} alt={alt} title={alt} />
       <p className="quantity">{quantity}</p>
-      <p className="priceOriginal">{valueToBRL(priceOriginal)}</p>
-      <p className="price">{valueToBRL(price)}</p>
+      <p className="priceOriginal">{converteReal(priceOriginal)}</p>
+      <p className="price">{converteReal(price)}</p>
     </div>
   );
 };
@@ -285,25 +296,38 @@ function CuponFunction() {
 const MainSection = () => {
 
   const { selectItens } = useContext(CarrinhoContext);
-  const [valorFrete, setValorFrete] = useState("-")
-  const [prazoEntrega, setPrazoEntrega] = useState("-")
+  const [valorFrete, setValorFrete] = useState("---");
+  const [prazoEntrega, setPrazoEntrega] = useState("---");
+  const [pagamentoSelecionado, setPagamento] = useState("---");
+  const [quantidadeParcelas, setParcelas] = useState("---");
   let somaProdutos = 0;
-  let pagamentoSelecionado = "";
-  let quantidadeParcelas = "";
   let totalAPagar = 0;
 
-  function handleChange (val){
+  function alteraFrete (valorFrete){
     
-    if(val === 20)
+    if(valorFrete === 20)
     setPrazoEntrega("Até 6 dias úteis");
 
-    if(val === 50)
+    if(valorFrete === 50)
     setPrazoEntrega("Até 2 dias úteis");
 
-    if(val == "Grátis")
+    if(valorFrete === "Grátis")
     setPrazoEntrega("Retirada em até 2 horas");
 
-    setValorFrete(val)
+    setValorFrete(valorFrete);
+
+    escolheuFrete = true;
+
+  }
+
+  function alteraPagamento(tipoPagamento){
+    
+    setPagamento(tipoPagamento);
+
+    if(tipoPagamento === "Boleto Bancário" || tipoPagamento === "Pix" || tipoPagamento === "Mercado Pago")
+    setParcelas("À vista");
+
+    escolheuPagamento = true;
 
   }
 
@@ -319,7 +343,7 @@ const MainSection = () => {
               content={selectItens.map((shoppingBag) => {
                 somaProdutos += shoppingBag.precoDesconto * shoppingBag.quantidade;
                
-                if(valorFrete !== "Grátis" && valorFrete !== "-")
+                if(valorFrete !== "Grátis" && valorFrete !== "---")
                 totalAPagar = somaProdutos + valorFrete;
                 else
                 totalAPagar = somaProdutos;
@@ -374,14 +398,14 @@ const MainSection = () => {
 
               <OptionField
                 valor={50}
-                handleChange={handleChange}
+                alteraFrete={alteraFrete}
                 name="Frete"
                 text="Sedex - Até 2 dias úteis"
                 description={`+R$ ${(50).toFixed(2)}`}
               />
               <OptionField
                 valor={20}
-                handleChange={handleChange}
+                alteraFrete={alteraFrete}
                 name="Frete"
                 text="PAC - Até 6 dias úteis"
                 description={`+R$ ${(20).toFixed(2)}`}
@@ -389,7 +413,7 @@ const MainSection = () => {
 
               <OptionField
                 valor={"Grátis"}
-                handleChange={handleChange}
+                alteraFrete={alteraFrete}
                 name="Frete"
                 text="Retira - Imediato"
                 description="Grátis"
@@ -403,6 +427,8 @@ const MainSection = () => {
           content={
             <>
               <OptionField
+                valor={"Boleto Bancário"}
+                alteraPagamento={alteraPagamento}
                 hasIcon={true}
                 name="Pagamento"
                 image={IconPg1}
@@ -410,6 +436,8 @@ const MainSection = () => {
               />
 
               <OptionField
+                valor={"Pix"}
+                alteraPagamento={alteraPagamento}
                 hasIcon={true}
                 name="Pagamento"
                 image={IconPg2}
@@ -417,6 +445,8 @@ const MainSection = () => {
               />
 
               <OptionField
+                valor={"Cartão de Credito"}
+                alteraPagamento={alteraPagamento}
                 hasIcon={true}
                 name="Pagamento"
                 image={IconPg3}
@@ -426,6 +456,8 @@ const MainSection = () => {
               {/*<CreditCardOptions />*/}
 
               <OptionField
+                valor={"Mercado Pago"}
+                alteraPagamento={alteraPagamento}
                 hasIcon={true}
                 name="Pagamento"
                 image={IconPg4}
