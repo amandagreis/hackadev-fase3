@@ -9,9 +9,10 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Costumer } from "../Data/Costumer";
 import { CarrinhoContext } from "../Context/carrinhoProdutos";
-import { limpaProductsTracker} from "../Context/carrinhoProdutos";
-let escolheuFrete, escolheuPagamento;
+import { limpaProductsTracker } from "../Context/carrinhoProdutos";
+import Axios from "axios";
 
+let escolheuFrete, escolheuPagamento;
 
 Modal.setAppElement("#root");
 
@@ -26,9 +27,8 @@ function converteReal(val) {
   return converted;
 }
 
-function formataFrete(val){
-  if(typeof(val) === "number")
-  val = converteReal(val);
+function formataFrete(val) {
+  if (typeof val === "number") val = converteReal(val);
 
   return val;
 }
@@ -113,7 +113,7 @@ const CheckoutModal = ({
   const [modalIsOpen, setIsOpen] = useState(false);
   const { setSelectItens } = useContext(CarrinhoContext);
 
-  function limpaCarrinho(){
+  function limpaCarrinho() {
     setSelectItens([]);
     limpaProductsTracker();
     escolheuFrete = false;
@@ -128,22 +128,35 @@ const CheckoutModal = ({
     setIsOpen(false);
   }
 
-  function terminaCompra(){
-    if(escolheuFrete && escolheuPagamento){
+  let API = process.env.API;
+  function salvaDB() {
+    Axios.post("https://api-ocean-hackadev.herokuapp.com/sessao", {
+      nome_cliente: "Anabela Cristina",
+      cpf: "40455533398",
+      rua: "Rua Alagada",
+      numero: "31",
+      complemento: "apartamento 307",
+      bairro: "Alternativos",
+      cep: "74000000",
+      cidade: "Goiânia",
+      estado: "GO",
+    });
+  }
+
+  function terminaCompra() {
+    if (escolheuFrete && escolheuPagamento) {
+      salvaDB();
       openModal();
       limpaCarrinho();
-    }
-    else{
-      if(escolheuFrete && !escolheuPagamento)
-      window.alert("Escolha uma forma de pagamento!");
-      else if(!escolheuFrete && escolheuPagamento)
-      window.alert("Escolha o tipo de frete!");
-      else 
-      window.alert("Escolha uma forma de pagamento e o frete!")
+    } else {
+      if (escolheuFrete && !escolheuPagamento)
+        window.alert("Escolha uma forma de pagamento!");
+      else if (!escolheuFrete && escolheuPagamento)
+        window.alert("Escolha o tipo de frete!");
+      else window.alert("Escolha uma forma de pagamento e o frete!");
     }
   }
 
- 
   return (
     <div className="modal-container">
       <button className="modal-opener" onClick={() => terminaCompra()}>
@@ -167,7 +180,6 @@ const CheckoutModal = ({
       </Modal>
     </div>
   );
-
 };
 
 const Cupon = ({ handleDiscount, discount }) => {
@@ -222,14 +234,27 @@ const Summary = ({
   );
 };
 
-const OptionField = ({name, image, alt, text, description, alteraFrete, alteraPagamento, hasIcon, valor}) => {
-  
-
+const OptionField = ({
+  name,
+  image,
+  alt,
+  text,
+  description,
+  alteraFrete,
+  alteraPagamento,
+  hasIcon,
+  valor,
+}) => {
   if (hasIcon)
     return (
       <div className="optionField">
-        <div className="clickable" >
-          <input type="radio" className="clickable" name={name} onChange={() => alteraPagamento(valor)} />
+        <div className="clickable">
+          <input
+            type="radio"
+            className="clickable"
+            name={name}
+            onChange={() => alteraPagamento(valor)}
+          />
         </div>
         <img className="icon" src={image} alt={alt} />
         <p className="optionText">{text}</p>
@@ -239,8 +264,13 @@ const OptionField = ({name, image, alt, text, description, alteraFrete, alteraPa
   else
     return (
       <div className="optionField">
-        <div className="clickable" >
-          <input type="radio" className="clickable" name={name}  onChange={() => alteraFrete(valor)} />
+        <div className="clickable">
+          <input
+            type="radio"
+            className="clickable"
+            name={name}
+            onChange={() => alteraFrete(valor)}
+          />
         </div>
         <p className="optionText">{text}</p>
         <p className="optionDescription">{description}</p>
@@ -258,7 +288,6 @@ const ProductBag = ({ content, subtotal }) => {
 };
 
 const Product = ({ image, alt, quantity, priceOriginal, price }) => {
-  
   return (
     <div className="product">
       <img src={image} alt={alt} title={alt} />
@@ -294,7 +323,6 @@ function CuponFunction() {
 }
 
 const MainSection = () => {
-
   const { selectItens } = useContext(CarrinhoContext);
   const [valorFrete, setValorFrete] = useState("---");
   const [prazoEntrega, setPrazoEntrega] = useState("---");
@@ -303,50 +331,46 @@ const MainSection = () => {
   let somaProdutos = 0;
   let totalAPagar = 0;
 
-  function alteraFrete (valorFrete){
-    
-    if(valorFrete === 20)
-    setPrazoEntrega("Até 6 dias úteis");
+  function alteraFrete(valorFrete) {
+    if (valorFrete === 20) setPrazoEntrega("Até 6 dias úteis");
 
-    if(valorFrete === 50)
-    setPrazoEntrega("Até 2 dias úteis");
+    if (valorFrete === 50) setPrazoEntrega("Até 2 dias úteis");
 
-    if(valorFrete === "Grátis")
-    setPrazoEntrega("Retirada em até 2 horas");
+    if (valorFrete === "Grátis") setPrazoEntrega("Retirada em até 2 horas");
 
     setValorFrete(valorFrete);
 
     escolheuFrete = true;
-
   }
 
-  function alteraPagamento(tipoPagamento){
-    
+  function alteraPagamento(tipoPagamento) {
     setPagamento(tipoPagamento);
 
-    if(tipoPagamento === "Boleto Bancário" || tipoPagamento === "Pix" || tipoPagamento === "Mercado Pago")
-    setParcelas("À vista");
+    if (
+      tipoPagamento === "Boleto Bancário" ||
+      tipoPagamento === "Pix" ||
+      tipoPagamento === "Mercado Pago"
+    )
+      setParcelas("À vista");
 
     escolheuPagamento = true;
-
   }
 
   return (
-    <section className="main_section" >
+    <section className="main_section">
       <div className="containerLeft">
         <Section
           name="SUAS COMPRAS"
           key={Date.now()}
           content={
             <ProductBag
-              
               content={selectItens.map((shoppingBag) => {
-                somaProdutos += shoppingBag.precoDesconto * shoppingBag.quantidade;
-               
-                if(valorFrete !== "Grátis" && valorFrete !== "---")
-                totalAPagar = somaProdutos + valorFrete;
-                else
-                totalAPagar = somaProdutos;
+                somaProdutos +=
+                  shoppingBag.precoDesconto * shoppingBag.quantidade;
+
+                if (valorFrete !== "Grátis" && valorFrete !== "---")
+                  totalAPagar = somaProdutos + valorFrete;
+                else totalAPagar = somaProdutos;
 
                 return (
                   <>
@@ -377,9 +401,15 @@ const MainSection = () => {
                 return (
                   <span className="Usuario" key={`${Date.now()}usuario`}>
                     <p key={`${Date.now()}p1`}>{costumer.name}</p>
-                    <p key={`${Date.now()}p2`}>{`${costumer.street} nº${costumer.number}`}</p>
-                    <p key={`${Date.now()}p3`}>{`${costumer.district}, CEP ${costumer.cep}, ${costumer.city}-${costumer.state}`}</p>
-                    <p key={`${Date.now()}p4`}>{`Telefone: ${costumer.phone}`}</p>
+                    <p
+                      key={`${Date.now()}p2`}
+                    >{`${costumer.street} nº${costumer.number}`}</p>
+                    <p
+                      key={`${Date.now()}p3`}
+                    >{`${costumer.district}, CEP ${costumer.cep}, ${costumer.city}-${costumer.state}`}</p>
+                    <p
+                      key={`${Date.now()}p4`}
+                    >{`Telefone: ${costumer.phone}`}</p>
                   </span>
                 );
               })}
@@ -395,7 +425,6 @@ const MainSection = () => {
           name="FRETE"
           content={
             <>
-
               <OptionField
                 valor={50}
                 alteraFrete={alteraFrete}
