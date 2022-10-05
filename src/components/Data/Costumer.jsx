@@ -1,6 +1,6 @@
 export const Costumer = [
   {
-    name: "Maria Silva e Silva",
+    name: "Leandro de Paula Rodrigues",
     street: "Rua Passárgadas",
     number: "1234",
     district: "Bairro dos Sonhos",
@@ -10,3 +10,4 @@ export const Costumer = [
     phone: "(62) 9999 0000"
   }
 ]
+

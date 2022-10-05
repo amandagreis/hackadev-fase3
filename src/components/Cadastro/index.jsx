@@ -1,6 +1,7 @@
 import "./styles.css";
 import { useForm } from "react-hook-form";
 import InputMask from 'react-input-mask';
+import Axios from "axios";
 
 function Cadastro() {
   const { register, handleSubmit, setValue, setFocus } = useForm();
@@ -25,6 +26,21 @@ function Cadastro() {
       });
   };
 
+  /*let API = process.env.API;
+  function salvaDB() {
+    Axios.post("https://api-ocean-hackadev.herokuapp.com/sessao", {
+      nome_cliente: "Anabela Cristina",
+      cpf: "40455533398",
+      rua: "Rua Alagada",
+      numero: "31",
+      complemento: "apartamento 307",
+      bairro: "Alternativos",
+      cep: "74000000",
+      cidade: "Goiânia",
+      estado: "GO",
+    });
+  }
+   salvaDB()*/
   return (
     <>
       <div className="form">

@@ -6,11 +6,12 @@ import IconPg2 from "../../checkout-icons/pix-icon.png";
 import IconPg3 from "../../checkout-icons/card-icon.png";
 import IconPg4 from "../../checkout-icons/mercadopago-icon.png";
 import { FaRegCheckCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { Costumer } from "../Data/Costumer";
+import { Link } from "react-router-dom";
 import { CarrinhoContext } from "../Context/carrinhoProdutos";
 import { limpaProductsTracker } from "../Context/carrinhoProdutos";
 import Axios from "axios";
+import axios from "axios";
 
 let escolheuFrete, escolheuPagamento;
 
@@ -131,14 +132,14 @@ const CheckoutModal = ({
   let API = process.env.API;
   function salvaDB() {
     Axios.post("https://api-ocean-hackadev.herokuapp.com/sessao", {
-      nome_cliente: "Anabela Cristina",
-      cpf: "40455533398",
-      rua: "Rua Alagada",
-      numero: "31",
+      nome_cliente: "Amanda Reis",
+      cpf: "99999999999",
+      rua: "Rua Sete",
+      numero: "05",
       complemento: "apartamento 307",
-      bairro: "Alternativos",
-      cep: "74000000",
-      cidade: "Goiânia",
+      bairro: "Apongas",
+      cep: "75360378",
+      cidade: "Goinia",
       estado: "GO",
     });
   }
@@ -355,6 +356,22 @@ const MainSection = () => {
 
     escolheuPagamento = true;
   }
+  const [Usuario, setUsuario] = useState(true);
+  const [contador, setContador] = useState(0);
+
+  if (contador === 0) {
+    const UsuariosR = axios
+      .get("https://api-ocean-hackadev.herokuapp.com/clientes")
+      .then((resposta) => {
+        setUsuario(() => {
+          const obj = resposta.data;
+          const item = obj.filter((user) => user.id_cliente == 10);
+          return item;
+        });
+        setContador(contador + 1);
+      })
+      .catch(() => setUsuario(false));
+  }
 
   return (
     <section className="main_section">
@@ -397,22 +414,21 @@ const MainSection = () => {
           key={`${Date.now()}Endereço`}
           content={
             <>
-              {Costumer.map((costumer) => {
-                return (
-                  <span className="Usuario" key={`${Date.now()}usuario`}>
-                    <p key={`${Date.now()}p1`}>{costumer.name}</p>
-                    <p
-                      key={`${Date.now()}p2`}
-                    >{`${costumer.street} nº${costumer.number}`}</p>
-                    <p
-                      key={`${Date.now()}p3`}
-                    >{`${costumer.district}, CEP ${costumer.cep}, ${costumer.city}-${costumer.state}`}</p>
-                    <p
-                      key={`${Date.now()}p4`}
-                    >{`Telefone: ${costumer.phone}`}</p>
-                  </span>
-                );
-              })}
+              {typeof Usuario === "object"
+                ? Usuario.map((costumer) => {
+                    return (
+                      <span className="Usuario" key={`${Date.now()}usuario`}>
+                        <p key={`${Date.now()}p1`}>{costumer.nome_cliente}</p>
+                        <p
+                          key={`${Date.now()}p2`}
+                        >{`${costumer.rua} nº${costumer.numero}`}</p>
+                        <p
+                          key={`${Date.now()}p3`}
+                        >{`${costumer.bairro}, CEP ${costumer.cep}, ${costumer.cidade}-${costumer.estado}`}</p>
+                      </span>
+                    );
+                  })
+                : ""}
               <ChangeAddress
                 openButtonText={"ALTERAR ENDEREÇO"}
                 closeButtonText={"CONCLUÍDO"}
