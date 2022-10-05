@@ -15,6 +15,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -34,6 +35,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -52,6 +54,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -70,6 +73,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -88,6 +92,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -106,6 +111,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -124,6 +130,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -142,6 +149,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -160,6 +168,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -179,6 +188,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -196,6 +206,7 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 
   {
@@ -214,5 +225,6 @@ export const dados = [
     size: ["P", "M", "G", "GG"],
     buttonSacola: "Adicionar ao Carrinho",
     selectSize: "",
+    quantidade: 1
   },
 ];

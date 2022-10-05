@@ -3,10 +3,13 @@ import { useEffect, useState, useContext } from "react";
 import { CarrinhoContext } from "../Context/carrinhoProdutos";
 
 
-function CarrinhoItem({ name, image, sizeSelect, preco, idItem }) {
+function CarrinhoItem({ name, image, sizeSelect, preco, idItem, quantidade}) {
   const [mult, setMult] = useState(1);
   const [totalProduto, setTotalProduto] = useState(preco);
   const { excluir } = useContext(CarrinhoContext);
+  const { incremento } = useContext(CarrinhoContext);
+  const { decremento } = useContext(CarrinhoContext);
+  const { mostraQuantidade } = useContext(CarrinhoContext);
 
   function operacao(n) {
     if (mult === 1 && n === -1) {
@@ -16,9 +19,21 @@ function CarrinhoItem({ name, image, sizeSelect, preco, idItem }) {
     setMult(mult + n);
   }
 
+
+
   useEffect(() => {
-    setTotalProduto(parseFloat((preco * mult).toFixed(2)));
-  }, [mult, preco]);
+    setTotalProduto(preco * quantidade);
+  }, [quantidade, preco]);
+
+
+  function converteReal (valor) {
+    let val = valor.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
+    return val;
+  }
 
   return (
     <>
@@ -33,11 +48,11 @@ function CarrinhoItem({ name, image, sizeSelect, preco, idItem }) {
         <div className="Infos">
           <h2>{name}</h2>
           <p>Tamanho: {sizeSelect}</p>
-          <p>R${totalProduto}</p>
+          <p>{converteReal(totalProduto)}</p>
           <div className="Value__controller">
-            <button onClick={() => operacao(1)}>+</button>
-            <p>{mult}</p>
-            <button onClick={() => operacao(-1)}>-</button>
+          <button onClick={() => decremento(idItem)}>-</button>
+            <p>{quantidade}</p>
+            <button onClick={() => incremento(idItem)}>+</button>
           </div>
         </div>
       </div>
